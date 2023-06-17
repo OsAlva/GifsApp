@@ -9,7 +9,7 @@ import { SharedModule } from './shared/shared.module';
   declarations: [
     AppComponent
   ],
-  imports: [
+  imports: [//los modulos se importan en imports
     BrowserModule,
     GifsModule,
     SharedModule
