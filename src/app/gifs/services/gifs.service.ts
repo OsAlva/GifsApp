@@ -1,11 +1,14 @@
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 @Injectable({providedIn: 'root'}) //lo proveemos en el root porque lo vamos a usar en toda la aplicacion sera global
 export class GifsService { // este servicio estara disponible en toda la aplicacion y si no le ponemos provideIn: 'root' tendriamos que importarlo en el app.module.ts en el apartado de providers: [] y asi estaria disponible en toda la aplicacion
+    
     private _tagHistory: string[] = [];
     private apiKey: string = 'cjA1jDuKfSW2QB3VCrV7lEUdbXYJMhi8'
+    private url: string= `https://api.giphy.com/v1/gifs`;
 
-    constructor() { }
+    constructor(private http: HttpClient) { } //inyectamos el servicio httpclient
     
     get tagHistory() {
         return [...this._tagHistory];
@@ -28,11 +31,25 @@ export class GifsService { // este servicio estara disponible en toda la aplicac
         if( tag.length === 0 ) return; //si el tag esta vacio no hagas nada
        this.organizedHistory( tag );
 
-       fetch(`https://api.giphy.com/v1/gifs/search?api_key=${this.apiKey}&q=${tag}&limit=10`)
-         .then( resp => resp.json() )
-            .then( data => {
-                console.log(data);
-            })
+    //    fetch(`https://api.giphy.com/v1/gifs/search?api_key=${this.apiKey}&q=${tag}&limit=10`)
+    //      .then( resp => resp.json() )
+    //         .then( data => {
+    //             console.log(data);
+    //         })
+
+        //con el httpClient de angular
+
+        const params = new HttpParams()
+            .set('api_key', this.apiKey)
+            .set('limit', '10')
+            .set('q', tag);
+
+
+        this.http.get(`${this.url}/search?${params}`).subscribe( (resp: any) => {   //esto es un observable, al suscribirnos estaremos escuchando la respuesta del servicio
+            console.log(resp.data);
+        })
+
+        
 
 
 
