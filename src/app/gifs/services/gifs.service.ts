@@ -51,7 +51,7 @@ export class GifsService { // este servicio estara disponible en toda la aplicac
         
 
             this.gifList = resp.data;
-            console.log({gifs: this.gifList})
+            // console.log({gifs: this.gifList})
         })
 
         
@@ -60,7 +60,7 @@ export class GifsService { // este servicio estara disponible en toda la aplicac
 
         // this._tagHistory.unshift( tag ); //unshift agrega un elemento al inicio del arreglo
 
-        console.log(this._tagHistory);
+        // console.log(this._tagHistory);
     }
 
 
