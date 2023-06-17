@@ -11,7 +11,9 @@ export class GifsService { // este servicio estara disponible en toda la aplicac
     private apiKey: string = 'cjA1jDuKfSW2QB3VCrV7lEUdbXYJMhi8'
     private url: string= `https://api.giphy.com/v1/gifs`;
 
-    constructor(private http: HttpClient) { } //inyectamos el servicio httpclient
+    constructor(private http: HttpClient) {
+        this.loadLocalStorage(); //cada vez que se inicie el servicio se cargara el local storage
+     } //inyectamos el servicio httpclient
     
     get tagHistory() {
         return [...this._tagHistory];
@@ -25,6 +27,7 @@ export class GifsService { // este servicio estara disponible en toda la aplicac
 
         this._tagHistory.unshift( tag ); //unshift agrega un elemento al inicio del arreglo
         this._tagHistory = this._tagHistory.splice(0,10); //splice corta el arreglo desde el elemento 0 hasta el 10 limitamos el arreglo a 10 elementos para que  el usuario no pueda agregsar indiscriminadamente
+        //ponemos aqui el metodo saveLocalStorage para que se guarde en el local storage cada vez que se haga una busqueda
         this.saveLocalStorage();
 
     }
@@ -32,6 +35,15 @@ export class GifsService { // este servicio estara disponible en toda la aplicac
 
     private saveLocalStorage():void { //este metodo es para guardar en el local storage
         localStorage.setItem('history', JSON.stringify(this._tagHistory)); //el local storage solo guarda strings por eso tenemos que convertir el arreglo de gifs a un string con JSON.stringify
+
+    }
+
+    private loadLocalStorage():void { //este metodo es para cargar el local storage
+        if(!localStorage.getItem('history')) return  //si no hay nada en el local storage no hagas nada
+        this._tagHistory = JSON.parse( localStorage.getItem('history')! ); // el signo de admiracion es para decirle a typescript que no se preocupe que si o si va a haber algo en el local storage y que no va a ser null, tenemos que hacer el proceso  inverso de json.stringify que es json.parse para convertir el string en un arreglo de nuevo
+
+        if(this._tagHistory.length === 0) return //si el arreglo esta vacio no hagas nada
+        this.searchTag( this._tagHistory[0] ); //si el arreglo no esta vacio entonces busca el primer elemento del arreglo
 
     }
 
