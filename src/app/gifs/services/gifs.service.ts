@@ -5,9 +5,9 @@ import { Gif, SearchResponse } from '../interfaces/gifs.interfaces';
 @Injectable({providedIn: 'root'}) //lo proveemos en el root porque lo vamos a usar en toda la aplicacion sera global
 export class GifsService { // este servicio estara disponible en toda la aplicacion y si no le ponemos provideIn: 'root' tendriamos que importarlo en el app.module.ts en el apartado de providers: [] y asi estaria disponible en toda la aplicacion
     
-    public gifList: Gif[] = [];
+    public gifList: Gif[] = []; //importante local storage solo guarda strings por eso tenemos que convertir el arreglo de gifs a un string con JSON.stringify
 
-    private _tagHistory: string[] = [];
+    private _tagHistory: string[] = []; //importante para local storage solo guarda strings por eso tenemos que convertir el arreglo de gifs a un string con JSON.stringify
     private apiKey: string = 'cjA1jDuKfSW2QB3VCrV7lEUdbXYJMhi8'
     private url: string= `https://api.giphy.com/v1/gifs`;
 
@@ -25,7 +25,13 @@ export class GifsService { // este servicio estara disponible en toda la aplicac
 
         this._tagHistory.unshift( tag ); //unshift agrega un elemento al inicio del arreglo
         this._tagHistory = this._tagHistory.splice(0,10); //splice corta el arreglo desde el elemento 0 hasta el 10 limitamos el arreglo a 10 elementos para que  el usuario no pueda agregsar indiscriminadamente
+        this.saveLocalStorage();
 
+    }
+
+
+    private saveLocalStorage():void { //este metodo es para guardar en el local storage
+        localStorage.setItem('history', JSON.stringify(this._tagHistory)); //el local storage solo guarda strings por eso tenemos que convertir el arreglo de gifs a un string con JSON.stringify
 
     }
 
