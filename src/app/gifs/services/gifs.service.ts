@@ -1,9 +1,12 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Gif, SearchResponse } from '../interfaces/gifs.interfaces';
 
 @Injectable({providedIn: 'root'}) //lo proveemos en el root porque lo vamos a usar en toda la aplicacion sera global
 export class GifsService { // este servicio estara disponible en toda la aplicacion y si no le ponemos provideIn: 'root' tendriamos que importarlo en el app.module.ts en el apartado de providers: [] y asi estaria disponible en toda la aplicacion
     
+    public gifList: Gif[] = [];
+
     private _tagHistory: string[] = [];
     private apiKey: string = 'cjA1jDuKfSW2QB3VCrV7lEUdbXYJMhi8'
     private url: string= `https://api.giphy.com/v1/gifs`;
@@ -38,15 +41,17 @@ export class GifsService { // este servicio estara disponible en toda la aplicac
     //         })
 
         //con el httpClient de angular
-
         const params = new HttpParams()
             .set('api_key', this.apiKey)
             .set('limit', '10')
             .set('q', tag);
 
 
-        this.http.get(`${this.url}/search?${params}`).subscribe( (resp: any) => {   //esto es un observable, al suscribirnos estaremos escuchando la respuesta del servicio
-            console.log(resp.data);
+        this.http.get<SearchResponse>(`${this.url}/search?${params}`).subscribe( (resp) => {   //esto es un observable, al suscribirnos estaremos escuchando la respuesta del servicio
+        
+
+            this.gifList = resp.data;
+            console.log({gifs: this.gifList})
         })
 
         
