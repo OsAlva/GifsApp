@@ -10,9 +10,26 @@ export class GifsService { // este servicio estara disponible en toda la aplicac
         return [...this._tagHistory];
     }   
 
-    searchTag( tag: string ):void { //el metodo searchTag recibe un string(newQuery) y lo asigna a la variable query
-        
+    private organizedHistory( tag: string ) {//este metodo es para que no se repitan los tags
+        tag = tag.toLowerCase();
+        if(this._tagHistory.includes(tag)) { //si el tag ya existe en el arreglo
+            this._tagHistory = this._tagHistory.filter( oldTag => oldTag !== tag ); //el filter regresa un nuevo arreglo con los elementos que cumplan la condicion menos los que duplicados 
+        }
+
         this._tagHistory.unshift( tag ); //unshift agrega un elemento al inicio del arreglo
+        this._tagHistory = this._tagHistory.splice(0,10); //splice corta el arreglo desde el elemento 0 hasta el 10 limitamos el arreglo a 10 elementos para que  el usuario no pueda agregsar indiscriminadamente
+
+
+    }
+
+    searchTag( tag: string ):void { //el metodo searchTag recibe un string(newQuery) y lo asigna a la variable query
+        //validaciones
+        if( tag.length === 0 ) return; //si el tag esta vacio no hagas nada
+       this.organizedHistory( tag );
+
+
+
+        // this._tagHistory.unshift( tag ); //unshift agrega un elemento al inicio del arreglo
 
         console.log(this._tagHistory);
     }
