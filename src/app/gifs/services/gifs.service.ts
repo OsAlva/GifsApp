@@ -28,6 +28,12 @@ export class GifsService { // este servicio estara disponible en toda la aplicac
         if( tag.length === 0 ) return; //si el tag esta vacio no hagas nada
        this.organizedHistory( tag );
 
+       fetch(`https://api.giphy.com/v1/gifs/search?api_key=${this.apiKey}&q=${tag}&limit=10`)
+         .then( resp => resp.json() )
+            .then( data => {
+                console.log(data);
+            })
+
 
 
         // this._tagHistory.unshift( tag ); //unshift agrega un elemento al inicio del arreglo
